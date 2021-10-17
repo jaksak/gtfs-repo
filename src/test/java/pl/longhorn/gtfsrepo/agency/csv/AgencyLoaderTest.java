@@ -1,0 +1,26 @@
+package pl.longhorn.gtfsrepo.agency.csv;
+
+import org.junit.jupiter.api.Test;
+import pl.longhorn.gtfsrepo.TestFileUtils;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class AgencyLoaderTest {
+
+    @Test
+    public void shouldLoadData() {
+        var loader = new AgencyLoader();
+        var input = TestFileUtils.load("agency.txt");
+
+        var result = loader.load(input);
+
+        assertEquals(1, result.size());
+
+        var first = result.get(0);
+        assertEquals("agency_1", first.getAgencyId());
+        assertEquals("ZTP  Kraków", first.getAgencyName());
+        assertEquals("http://ztp.krakow.pl/", first.getAgencyUrl());
+        assertEquals("Europe/Warsaw", first.getAgencyTimezone());
+        assertEquals("+48 12 19 150", first.getAgencyPhone());
+    }
+}
