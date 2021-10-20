@@ -13,6 +13,11 @@ public class CalendarDateExceptionTypeMapper {
     }
 
     public CalendarDateExceptionType map(byte baseValue) {
-        return typesByBaseValue.get(baseValue);
+        var result = typesByBaseValue.get(baseValue);
+        if (result == null) {
+            throw new IllegalArgumentException(baseValue + " is invalid");
+        } else {
+            return result;
+        }
     }
 }
