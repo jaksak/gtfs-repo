@@ -11,7 +11,7 @@ class FeedInfoLoaderTest {
     @Test
     void shouldParseData() {
         var loader = new FeedInfoLoader();
-        var input = TestFileUtils.load("feed_info.txt");
+        var input = TestFileUtils.csvReader("feed_info.txt");
 
         var result = loader.load(input);
 

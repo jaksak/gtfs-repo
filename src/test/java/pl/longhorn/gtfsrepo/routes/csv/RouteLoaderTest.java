@@ -10,7 +10,7 @@ class RouteLoaderTest {
     @Test
     void shouldParseData() {
         var loader = new RouteLoader();
-        var input = TestFileUtils.load("routes.txt");
+        var input = TestFileUtils.csvReader("routes.txt");
 
         var result = loader.load(input);
 

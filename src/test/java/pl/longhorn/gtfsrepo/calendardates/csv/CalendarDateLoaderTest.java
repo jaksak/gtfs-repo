@@ -12,7 +12,7 @@ class CalendarDateLoaderTest {
     @Test
     void shouldParseData() {
         var loader = new CalendarDateLoader();
-        var input = TestFileUtils.load("calendar_dates.txt");
+        var input = TestFileUtils.csvReader("calendar_dates.txt");
 
         var result = loader.load(input);
 

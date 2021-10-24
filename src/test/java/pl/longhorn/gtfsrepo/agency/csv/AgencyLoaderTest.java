@@ -10,7 +10,7 @@ class AgencyLoaderTest {
     @Test
     public void shouldLoadData() {
         var loader = new AgencyLoader();
-        var input = TestFileUtils.load("agency.txt");
+        var input = TestFileUtils.csvReader("agency.txt");
 
         var result = loader.load(input);
 

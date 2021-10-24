@@ -13,7 +13,7 @@ class StopTimeLoaderTest {
     @Test
     void shouldParseData() {
         var loader = new StopTimeLoader();
-        var input = TestFileUtils.load("stop_times.txt");
+        var input = TestFileUtils.csvReader("stop_times.txt");
 
         var result = loader.load(input);
 

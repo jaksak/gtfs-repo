@@ -12,7 +12,7 @@ class CalendarLoaderTest {
     @Test
     void shouldLoadData() {
         var loader = new CalendarLoader();
-        var input = TestFileUtils.load("calendar.txt");
+        var input = TestFileUtils.csvReader("calendar.txt");
 
         var result = loader.load(input);
 

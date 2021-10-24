@@ -12,7 +12,7 @@ class TripLoaderTest {
     @Test
     void shouldParseData() {
         var loader = new TripLoader();
-        var input = TestFileUtils.load("trips.txt");
+        var input = TestFileUtils.csvReader("trips.txt");
 
         var result = loader.load(input);
 
