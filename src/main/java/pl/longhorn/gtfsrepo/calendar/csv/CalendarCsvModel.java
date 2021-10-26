@@ -10,7 +10,7 @@ import java.time.LocalDate;
 public class CalendarCsvModel {
 
     @CsvBindByName(column = "service_id")
-    private String serviceId;
+    private String externalServiceId;
 
     @CsvBindByName(column = "monday")
     private boolean monday;
