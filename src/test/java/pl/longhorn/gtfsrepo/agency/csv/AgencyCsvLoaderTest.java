@@ -5,11 +5,11 @@ import pl.longhorn.gtfsrepo.TestFileUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class AgencyLoaderTest {
+class AgencyCsvLoaderTest {
 
     @Test
     public void shouldLoadData() {
-        var loader = new AgencyLoader();
+        var loader = new AgencyCsvLoader();
         var input = TestFileUtils.csvReader("agency.txt");
 
         var result = loader.load(input);

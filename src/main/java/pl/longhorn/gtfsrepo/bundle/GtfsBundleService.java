@@ -23,7 +23,7 @@ public class GtfsBundleService {
 
     private final SchemaVersionRepository schemaVersionRepository;
 
-    private final AgencyLoader agencyLoader;
+    private final AgencyCsvLoader agencyLoader;
     private final CalendarLoader calendarLoader;
     private final CalendarDateLoader calendarDateLoader;
     private final FeedInfoLoader feedInfoLoader;
@@ -31,6 +31,8 @@ public class GtfsBundleService {
     private final StopTimeLoader stopTimeLoader;
     private final StopLoader stopLoader;
     private final TripLoader tripLoader;
+
+    private final AgencyCsvTranslator agencyCsvTranslator;
 
     public void run(InputStream inputStream, int customerId) throws IOException {
         var schemaVersion = prepareSchemaVersion(customerId);
@@ -40,7 +42,8 @@ public class GtfsBundleService {
     }
 
     private void save(GtfsCsvBundleData csvData, SchemaVersion schemaVersion) {
-        System.out.println(csvData);
+        var savedAgency = agencyCsvTranslator.translate(csvData.agencies, schemaVersion);
+
     }
 
     private void prepare(ZipEntryCaller.SimpleZippedFile f, GtfsCsvBundleData.GtfsCsvBundleDataBuilder csvData) {

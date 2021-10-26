@@ -7,7 +7,7 @@ import java.io.Reader;
 import java.util.List;
 
 @Component
-public class AgencyLoader {
+public class AgencyCsvLoader {
 
     public List<AgencyCsvModel> load(Reader reader) {
         return new CsvToBeanBuilder<AgencyCsvModel>(reader)

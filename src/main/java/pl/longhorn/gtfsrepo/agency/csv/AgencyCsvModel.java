@@ -19,4 +19,6 @@ public class AgencyCsvModel {
     private String agencyPhone;
     @CsvBindByName(column = "agency_fare_url")
     private String agencyFareUrl;
+    @CsvBindByName(column = "agency_email")
+    private String agencyEmail;
 }
