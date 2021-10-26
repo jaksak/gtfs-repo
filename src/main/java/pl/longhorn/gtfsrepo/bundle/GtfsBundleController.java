@@ -1,19 +1,24 @@
 package pl.longhorn.gtfsrepo.bundle;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import pl.longhorn.gtfsrepo.zip.ZipEntryCaller;
 
 import java.io.IOException;
 
 @RestController
 @RequestMapping("customer/bundle")
+@RequiredArgsConstructor
 public class GtfsBundleController {
 
+    private final GtfsBundleService gtfsBundleService;
+
     @PostMapping
-    public void uploadBundleGtfsData(@RequestParam("file") MultipartFile file) throws IOException {
+    public void uploadBundleGtfsData(
+            @RequestParam("customerId") int customerId,
+            @RequestParam("file") MultipartFile file) throws IOException {
         try (var inputStream = file.getInputStream()) {
-            new ZipEntryCaller(inputStream).call(f -> System.out.println(f.getOriginalName()));
+            gtfsBundleService.run(inputStream, customerId);
         }
     }
 }
