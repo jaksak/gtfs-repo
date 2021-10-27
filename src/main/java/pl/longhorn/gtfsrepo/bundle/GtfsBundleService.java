@@ -1,13 +1,13 @@
 package pl.longhorn.gtfsrepo.bundle;
 
 import lombok.*;
-import org.springframework.stereotype.Service;
 import pl.longhorn.gtfsrepo.agency.csv.*;
 import pl.longhorn.gtfsrepo.calendar.csv.*;
 import pl.longhorn.gtfsrepo.calendardates.csv.*;
 import pl.longhorn.gtfsrepo.feedinfo.csv.*;
 import pl.longhorn.gtfsrepo.routes.csv.*;
 import pl.longhorn.gtfsrepo.schemaversion.*;
+import pl.longhorn.gtfsrepo.service.Service;
 import pl.longhorn.gtfsrepo.stops.csv.*;
 import pl.longhorn.gtfsrepo.stoptimes.csv.*;
 import pl.longhorn.gtfsrepo.trips.csv.*;
@@ -15,9 +15,11 @@ import pl.longhorn.gtfsrepo.zip.ZipEntryCaller;
 
 import java.io.*;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 
-@Service
+import static pl.longhorn.gtfsrepo.primitive.FunctionUtils.ifNotEmpty;
+
+@org.springframework.stereotype.Service
 @RequiredArgsConstructor
 public class GtfsBundleService {
 
@@ -35,6 +37,7 @@ public class GtfsBundleService {
     private final AgencyCsvTranslator agencyCsvTranslator;
     private final CalendarCsvTranslator calendarCsvTranslator;
     private final CalendarDateCsvTranslator calendarDateCsvTranslator;
+    private final FeedInfoCsvTranslator feedInfoCsvTranslator;
 
     public void run(InputStream inputStream, int customerId) throws IOException {
         var schemaVersion = prepareSchemaVersion(customerId);
@@ -44,13 +47,22 @@ public class GtfsBundleService {
     }
 
     private void save(GtfsCsvBundleData csvData, SchemaVersion schemaVersion) {
-        var savedAgency = agencyCsvTranslator.translate(csvData.agencies, schemaVersion);
+        var savedAgency = ifNotEmpty(csvData.agencies, a -> agencyCsvTranslator.translate(a, schemaVersion));
 
-        var calendarTranslatorResults = calendarCsvTranslator.translate(csvData.calendar, schemaVersion);
-        var savedCalendar = calendarTranslatorResults.getFirst();
-        var savedService = calendarTranslatorResults.getSecond();
+        Map<String, Service> savedService = new HashMap<>();
+        if (csvData.calendar != null) {
+            var calendarTranslatorResults = calendarCsvTranslator.translate(csvData.calendar, schemaVersion);
+            var savedCalendar = calendarTranslatorResults.getFirst();
+            savedService = calendarTranslatorResults.getSecond();
+        }
 
-        savedService = calendarDateCsvTranslator.translate(csvData.calendarDates, schemaVersion, savedService);
+        if (csvData.calendarDates != null) {
+            savedService = calendarDateCsvTranslator.translate(csvData.calendarDates, schemaVersion, savedService);
+        }
+
+        if (csvData.feedInfos != null) {
+            feedInfoCsvTranslator.translate(csvData.feedInfos, schemaVersion);
+        }
     }
 
     private void prepare(ZipEntryCaller.SimpleZippedFile f, GtfsCsvBundleData.GtfsCsvBundleDataBuilder csvData) {

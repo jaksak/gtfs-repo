@@ -20,4 +20,10 @@ public class FeedInfoCsvModel {
     private LocalDate feedStartDate;
     @CsvCustomBindByName(column = "feed_end_date", converter = LocalDateConverter.class)
     private LocalDate feedEndDate;
+    @CsvBindByName(column = "default_lang")
+    private String defaultLang;
+    @CsvBindByName(column = "feed_contact_email")
+    private String feedContactEmail;
+    @CsvBindByName(column = "feed_contact_url")
+    private String feedContactUrl;
 }
