@@ -10,7 +10,7 @@ import java.time.LocalDate;
 public class CalendarDateCsvModel {
 
     @CsvBindByName(column = "service_id")
-    private String serviceId;
+    private String externalServiceId;
     @CsvCustomBindByName(column = "date", converter = LocalDateConverter.class)
     private LocalDate date;
     @CsvBindByName(column = "exception_type")

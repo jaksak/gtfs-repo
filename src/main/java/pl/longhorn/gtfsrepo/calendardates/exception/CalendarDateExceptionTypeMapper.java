@@ -1,8 +1,11 @@
 package pl.longhorn.gtfsrepo.calendardates.exception;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Component
 public class CalendarDateExceptionTypeMapper {
 
     private final Map<Byte, CalendarDateExceptionType> typesByBaseValue;

@@ -19,7 +19,7 @@ class CalendarDateLoaderTest {
         assertEquals(4, result.size());
 
         var first = result.get(0);
-        assertEquals("service_1", first.getServiceId());
+        assertEquals("service_1", first.getExternalServiceId());
         assertEquals(LocalDate.of(2021, 11, 1), first.getDate());
         assertEquals(2, first.getExceptionTypeValue());
     }

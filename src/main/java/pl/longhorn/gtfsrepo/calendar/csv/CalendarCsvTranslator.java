@@ -1,6 +1,7 @@
 package pl.longhorn.gtfsrepo.calendar.csv;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 import pl.longhorn.gtfsrepo.calendar.Calendar;
 import pl.longhorn.gtfsrepo.calendar.*;
@@ -14,17 +15,17 @@ import java.util.*;
 public class CalendarCsvTranslator {
 
     private final CalendarRepository calendarRepository;
-    private final ServiceRepository serviceRepository;
+    private final ServiceService serviceService;
 
-    public List<Calendar> translate(List<CalendarCsvModel> calendars, SchemaVersion schemaVersion) {
-        List<Calendar> list = new ArrayList<>();
+    public Pair<List<Calendar>, Map<String, Service>> translate(List<CalendarCsvModel> calendarCsvModels, SchemaVersion schemaVersion) {
+        List<Calendar> calendars = new ArrayList<>();
         Map<String, Service> serviceByExternalId = new HashMap<>();
-        for (CalendarCsvModel c : calendars) {
+        for (CalendarCsvModel c : calendarCsvModels) {
             Service service = prepareService(serviceByExternalId, c.getExternalServiceId(), schemaVersion);
             Calendar translate = translate(c, schemaVersion, service);
-            list.add(translate);
+            calendars.add(translate);
         }
-        return list;
+        return Pair.of(calendars, serviceByExternalId);
     }
 
     public Calendar translate(
@@ -50,10 +51,7 @@ public class CalendarCsvTranslator {
     private Service prepareService(Map<String, Service> serviceByExternalId, String externalServiceId, SchemaVersion schemaVersion) {
         var service = serviceByExternalId.get(externalServiceId);
         if (service == null) {
-            service = serviceRepository.save(Service.builder()
-                    .schemaId(schemaVersion.getId())
-                    .externalServiceId(externalServiceId)
-                    .build());
+            service = serviceService.findOrCreate(schemaVersion.getId(), externalServiceId);
             serviceByExternalId.put(externalServiceId, service);
         }
         return service;

@@ -34,6 +34,7 @@ public class GtfsBundleService {
 
     private final AgencyCsvTranslator agencyCsvTranslator;
     private final CalendarCsvTranslator calendarCsvTranslator;
+    private final CalendarDateCsvTranslator calendarDateCsvTranslator;
 
     public void run(InputStream inputStream, int customerId) throws IOException {
         var schemaVersion = prepareSchemaVersion(customerId);
@@ -44,7 +45,12 @@ public class GtfsBundleService {
 
     private void save(GtfsCsvBundleData csvData, SchemaVersion schemaVersion) {
         var savedAgency = agencyCsvTranslator.translate(csvData.agencies, schemaVersion);
-        var savedCalendar = calendarCsvTranslator.translate(csvData.calendar, schemaVersion);
+
+        var calendarTranslatorResults = calendarCsvTranslator.translate(csvData.calendar, schemaVersion);
+        var savedCalendar = calendarTranslatorResults.getFirst();
+        var savedService = calendarTranslatorResults.getSecond();
+
+        savedService = calendarDateCsvTranslator.translate(csvData.calendarDates, schemaVersion, savedService);
     }
 
     private void prepare(ZipEntryCaller.SimpleZippedFile f, GtfsCsvBundleData.GtfsCsvBundleDataBuilder csvData) {
