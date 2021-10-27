@@ -18,7 +18,7 @@ public class CalendarRepository {
     public Calendar save(Calendar calendar) {
         var id = simpleJdbcInsert.executeAndReturnKey(new MapSqlParameterSource()
                 .addValue("schema_id", calendar.getSchemaId())
-                .addValue("external_service_id", calendar.getExternalServiceId())
+                .addValue("service_id", calendar.getServiceId())
                 .addValue("monday", calendar.isMonday())
                 .addValue("tuesday", calendar.isTuesday())
                 .addValue("wednesday", calendar.isWednesday())

@@ -9,8 +9,8 @@ import java.time.LocalDate;
 public class Calendar {
     private int id;
     private int schemaId;
+    private int serviceId;
 
-    private String externalServiceId;
     private boolean monday;
     private boolean tuesday;
     private boolean wednesday;
