@@ -17,7 +17,7 @@ class RouteLoaderTest {
         assertEquals(27, result.size());
 
         var first = result.get(0);
-        assertEquals("route_31", first.getRouteId());
+        assertEquals("route_31", first.getRouteExternalId());
         assertEquals("agency_1", first.getAgencyId());
         assertEquals("1", first.getRouteShortName());
         assertEquals("", first.getRouteLongName());

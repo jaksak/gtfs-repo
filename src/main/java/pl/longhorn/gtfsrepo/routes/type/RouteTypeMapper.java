@@ -1,10 +1,13 @@
 package pl.longhorn.gtfsrepo.routes.type;
 
+import org.springframework.stereotype.Component;
 import pl.longhorn.gtfsrepo.primitive.ShortUtils;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+@Component
 public class RouteTypeMapper {
 
     // Tram, Streetcar, Light rail. Any light rail or street level system within a metropolitan area

@@ -7,7 +7,7 @@ import lombok.Data;
 public class RouteCsvModel {
 
     @CsvBindByName(column = "route_id")
-    private String routeId;
+    private String routeExternalId;
     @CsvBindByName(column = "agency_id")
     private String agencyId;
     @CsvBindByName(column = "route_short_name")

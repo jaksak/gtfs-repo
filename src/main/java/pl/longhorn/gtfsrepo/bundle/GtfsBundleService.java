@@ -10,6 +10,7 @@ import pl.longhorn.gtfsrepo.calendardates.csv.CalendarDateLoader;
 import pl.longhorn.gtfsrepo.feedinfo.csv.FeedInfoCsvTranslator;
 import pl.longhorn.gtfsrepo.feedinfo.csv.FeedInfoLoader;
 import pl.longhorn.gtfsrepo.routes.csv.RouteLoader;
+import pl.longhorn.gtfsrepo.routes.csv.RouteTranslator;
 import pl.longhorn.gtfsrepo.schemaversion.SchemaVersion;
 import pl.longhorn.gtfsrepo.schemaversion.SchemaVersionRepository;
 import pl.longhorn.gtfsrepo.stops.csv.StopLoader;
@@ -41,6 +42,7 @@ public class GtfsBundleService {
     private final CalendarCsvTranslator calendarCsvTranslator;
     private final CalendarDateCsvTranslator calendarDateCsvTranslator;
     private final FeedInfoCsvTranslator feedInfoCsvTranslator;
+    private final RouteTranslator routeTranslator;
 
     public void run(InputStream inputStream, int customerId) throws IOException {
         var schemaVersion = prepareSchemaVersion(customerId);
@@ -64,6 +66,10 @@ public class GtfsBundleService {
 
         if (data.getFeedInfos() != null) {
             data = feedInfoCsvTranslator.translate(data, schemaVersion);
+        }
+
+        if (data.getRoutes() != null) {
+            data = routeTranslator.translate(data, schemaVersion);
         }
     }
 

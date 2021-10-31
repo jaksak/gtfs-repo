@@ -1,8 +1,11 @@
 package pl.longhorn.gtfsrepo.routes.pickuptype;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Component
 public class PickupMapper {
 
     private final Map<Byte, PickupType> typesByBaseValue;

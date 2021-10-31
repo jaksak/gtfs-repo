@@ -22,14 +22,14 @@ public class CalendarCsvTranslator {
 
     public GtfsBundleWorkingData translate(GtfsBundleWorkingData data, SchemaVersion schemaVersion) {
         List<Calendar> calendars = new ArrayList<>();
-        Map<String, Service> serviceByExternalId = data.getServicesByExternalId();
+        Map<String, Service> serviceByExternalId = data.getSavedServices();
         for (CalendarCsvModel c : data.getCalendar()) {
             Service service = prepareService(serviceByExternalId, c.getExternalServiceId(), schemaVersion);
             Calendar translate = translate(c, schemaVersion, service);
             calendars.add(translate);
         }
         data.setSavedCalendar(calendars);
-        data.setServicesByExternalId(serviceByExternalId);
+        data.setSavedServices(serviceByExternalId);
         return data;
     }
 

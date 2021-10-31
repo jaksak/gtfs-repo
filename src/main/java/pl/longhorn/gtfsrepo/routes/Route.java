@@ -1,14 +1,18 @@
 package pl.longhorn.gtfsrepo.routes;
 
+import lombok.Builder;
+import lombok.Data;
 import pl.longhorn.gtfsrepo.routes.pickuptype.PickupType;
 import pl.longhorn.gtfsrepo.routes.type.RouteType;
 
+@Data
+@Builder
 public class Route {
     private int id;
     private int schemaId;
 
-    private String routeId;
-    private String agencyId;
+    private String routeExternalId;
+    private Integer agencyId;
     private String routeShortName;
     private String routeLongName;
     private String routeDesc;
@@ -16,7 +20,7 @@ public class Route {
     private String routeUrl;
     private String routeColor;
     private String routeTextColor;
-    private int routeSortOrder;
+    private Integer routeSortOrder;
     private PickupType continuousPickup;
     private PickupType continuousDropOff;
 }

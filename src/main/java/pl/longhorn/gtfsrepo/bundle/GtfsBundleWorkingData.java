@@ -10,6 +10,7 @@ import pl.longhorn.gtfsrepo.calendardates.CalendarDate;
 import pl.longhorn.gtfsrepo.calendardates.csv.CalendarDateCsvModel;
 import pl.longhorn.gtfsrepo.feedinfo.FeedInfo;
 import pl.longhorn.gtfsrepo.feedinfo.csv.FeedInfoCsvModel;
+import pl.longhorn.gtfsrepo.routes.Route;
 import pl.longhorn.gtfsrepo.routes.csv.RouteCsvModel;
 import pl.longhorn.gtfsrepo.service.Service;
 import pl.longhorn.gtfsrepo.stops.csv.StopCsvModel;
@@ -34,7 +35,7 @@ public class GtfsBundleWorkingData {
     private final List<TripCsvModel> trips;
 
     @Builder.Default
-    private List<Agency> savedAgencies = new ArrayList<>();
+    private Map<String, Agency> savedAgencies = new HashMap<>();
     @Builder.Default
     private List<Calendar> savedCalendar = new ArrayList<>();
     @Builder.Default
@@ -42,5 +43,7 @@ public class GtfsBundleWorkingData {
     @Builder.Default
     private List<FeedInfo> savedFeedInfos = new ArrayList<>();
     @Builder.Default
-    private Map<String, Service> servicesByExternalId = new HashMap<>();
+    private List<Route> savedRoutes = new ArrayList<>();
+    @Builder.Default
+    private Map<String, Service> savedServices = new HashMap<>();
 }
