@@ -1,23 +1,26 @@
 package pl.longhorn.gtfsrepo.bundle;
 
-import lombok.*;
-import pl.longhorn.gtfsrepo.agency.csv.*;
-import pl.longhorn.gtfsrepo.calendar.csv.*;
-import pl.longhorn.gtfsrepo.calendardates.csv.*;
-import pl.longhorn.gtfsrepo.feedinfo.csv.*;
-import pl.longhorn.gtfsrepo.routes.csv.*;
-import pl.longhorn.gtfsrepo.schemaversion.*;
-import pl.longhorn.gtfsrepo.service.Service;
-import pl.longhorn.gtfsrepo.stops.csv.*;
-import pl.longhorn.gtfsrepo.stoptimes.csv.*;
-import pl.longhorn.gtfsrepo.trips.csv.*;
+import lombok.RequiredArgsConstructor;
+import pl.longhorn.gtfsrepo.agency.csv.AgencyCsvLoader;
+import pl.longhorn.gtfsrepo.agency.csv.AgencyCsvTranslator;
+import pl.longhorn.gtfsrepo.calendar.csv.CalendarCsvTranslator;
+import pl.longhorn.gtfsrepo.calendar.csv.CalendarLoader;
+import pl.longhorn.gtfsrepo.calendardates.csv.CalendarDateCsvTranslator;
+import pl.longhorn.gtfsrepo.calendardates.csv.CalendarDateLoader;
+import pl.longhorn.gtfsrepo.feedinfo.csv.FeedInfoCsvTranslator;
+import pl.longhorn.gtfsrepo.feedinfo.csv.FeedInfoLoader;
+import pl.longhorn.gtfsrepo.routes.csv.RouteLoader;
+import pl.longhorn.gtfsrepo.schemaversion.SchemaVersion;
+import pl.longhorn.gtfsrepo.schemaversion.SchemaVersionRepository;
+import pl.longhorn.gtfsrepo.stops.csv.StopLoader;
+import pl.longhorn.gtfsrepo.stoptimes.csv.StopTimeLoader;
+import pl.longhorn.gtfsrepo.trips.csv.TripLoader;
 import pl.longhorn.gtfsrepo.zip.ZipEntryCaller;
 
-import java.io.*;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
-import java.util.*;
-
-import static pl.longhorn.gtfsrepo.primitive.FunctionUtils.ifNotEmpty;
 
 @org.springframework.stereotype.Service
 @RequiredArgsConstructor
@@ -41,34 +44,33 @@ public class GtfsBundleService {
 
     public void run(InputStream inputStream, int customerId) throws IOException {
         var schemaVersion = prepareSchemaVersion(customerId);
-        var csvData = GtfsCsvBundleData.builder();
+        var csvData = GtfsBundleWorkingData.builder();
         new ZipEntryCaller(inputStream).call(f -> prepare(f, csvData));
         save(csvData.build(), schemaVersion);
     }
 
-    private void save(GtfsCsvBundleData csvData, SchemaVersion schemaVersion) {
-        var savedAgency = ifNotEmpty(csvData.agencies, a -> agencyCsvTranslator.translate(a, schemaVersion));
-
-        Map<String, Service> savedService = new HashMap<>();
-        if (csvData.calendar != null) {
-            var calendarTranslatorResults = calendarCsvTranslator.translate(csvData.calendar, schemaVersion);
-            var savedCalendar = calendarTranslatorResults.getFirst();
-            savedService = calendarTranslatorResults.getSecond();
+    private void save(GtfsBundleWorkingData data, SchemaVersion schemaVersion) {
+        if (data.getAgencyCsv() != null) {
+            data = agencyCsvTranslator.translate(data, schemaVersion);
         }
 
-        if (csvData.calendarDates != null) {
-            savedService = calendarDateCsvTranslator.translate(csvData.calendarDates, schemaVersion, savedService);
+        if (data.getCalendar() != null) {
+            data = calendarCsvTranslator.translate(data, schemaVersion);
         }
 
-        if (csvData.feedInfos != null) {
-            feedInfoCsvTranslator.translate(csvData.feedInfos, schemaVersion);
+        if (data.getCalendarDates() != null) {
+            data = calendarDateCsvTranslator.translate(data, schemaVersion);
+        }
+
+        if (data.getFeedInfos() != null) {
+            data = feedInfoCsvTranslator.translate(data, schemaVersion);
         }
     }
 
-    private void prepare(ZipEntryCaller.SimpleZippedFile f, GtfsCsvBundleData.GtfsCsvBundleDataBuilder csvData) {
+    private void prepare(ZipEntryCaller.SimpleZippedFile f, GtfsBundleWorkingData.GtfsBundleWorkingDataBuilder csvData) {
         try (FileReader fileReader = new FileReader(f.getPathToFile().toFile())) {
             switch (f.getOriginalName()) {
-                case "agency.txt" -> csvData.agencies(agencyLoader.load(fileReader));
+                case "agency.txt" -> csvData.agencyCsv(agencyLoader.load(fileReader));
                 case "calendar.txt" -> csvData.calendar(calendarLoader.load(fileReader));
                 case "calendar_dates.txt" -> csvData.calendarDates(calendarDateLoader.load(fileReader));
                 case "feed_info.txt" -> csvData.feedInfos(feedInfoLoader.load(fileReader));
@@ -90,19 +92,5 @@ public class GtfsBundleService {
                 .isActive(Boolean.TRUE)
                 .build();
         return schemaVersionRepository.add(schema);
-    }
-
-    @Builder
-    @ToString
-    static
-    class GtfsCsvBundleData {
-        private final List<AgencyCsvModel> agencies;
-        private final List<CalendarCsvModel> calendar;
-        private final List<CalendarDateCsvModel> calendarDates;
-        private final List<FeedInfoCsvModel> feedInfos;
-        private final List<RouteCsvModel> routes;
-        private final List<StopTimeCsvModel> stopTimes;
-        private final List<StopCsvModel> stops;
-        private final List<TripCsvModel> trips;
     }
 }

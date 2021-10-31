@@ -2,10 +2,12 @@ package pl.longhorn.gtfsrepo.feedinfo.csv;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import pl.longhorn.gtfsrepo.feedinfo.*;
+import pl.longhorn.gtfsrepo.bundle.GtfsBundleWorkingData;
+import pl.longhorn.gtfsrepo.feedinfo.FeedInfo;
+import pl.longhorn.gtfsrepo.feedinfo.FeedInfoRepository;
 import pl.longhorn.gtfsrepo.schemaversion.SchemaVersion;
 
-import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -13,13 +15,17 @@ public class FeedInfoCsvTranslator {
 
     private final FeedInfoRepository feedInfoRepository;
 
-    public void translate(List<FeedInfoCsvModel> feedInfoCsvModels, SchemaVersion schemaVersion) {
-        feedInfoCsvModels.forEach(f -> translate(f, schemaVersion));
+    public GtfsBundleWorkingData translate(GtfsBundleWorkingData data, SchemaVersion schemaVersion) {
+        var savedFeedInfos = data.getFeedInfos().stream()
+                .map(f -> translate(f, schemaVersion))
+                .collect(Collectors.toList());
+        data.setSavedFeedInfos(savedFeedInfos);
+        return data;
     }
 
-    public void translate(FeedInfoCsvModel csvModel, SchemaVersion schemaVersion) {
+    public FeedInfo translate(FeedInfoCsvModel csvModel, SchemaVersion schemaVersion) {
         var feedInfo = map(csvModel, schemaVersion);
-        feedInfoRepository.save(feedInfo);
+        return feedInfoRepository.save(feedInfo);
     }
 
     private FeedInfo map(FeedInfoCsvModel csvModel, SchemaVersion schemaVersion) {

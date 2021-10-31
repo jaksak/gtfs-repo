@@ -1,14 +1,17 @@
 package pl.longhorn.gtfsrepo.calendar.csv;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
+import pl.longhorn.gtfsrepo.bundle.GtfsBundleWorkingData;
 import pl.longhorn.gtfsrepo.calendar.Calendar;
-import pl.longhorn.gtfsrepo.calendar.*;
+import pl.longhorn.gtfsrepo.calendar.CalendarRepository;
 import pl.longhorn.gtfsrepo.schemaversion.SchemaVersion;
-import pl.longhorn.gtfsrepo.service.*;
+import pl.longhorn.gtfsrepo.service.Service;
+import pl.longhorn.gtfsrepo.service.ServiceService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -17,15 +20,17 @@ public class CalendarCsvTranslator {
     private final CalendarRepository calendarRepository;
     private final ServiceService serviceService;
 
-    public Pair<List<Calendar>, Map<String, Service>> translate(List<CalendarCsvModel> calendarCsvModels, SchemaVersion schemaVersion) {
+    public GtfsBundleWorkingData translate(GtfsBundleWorkingData data, SchemaVersion schemaVersion) {
         List<Calendar> calendars = new ArrayList<>();
-        Map<String, Service> serviceByExternalId = new HashMap<>();
-        for (CalendarCsvModel c : calendarCsvModels) {
+        Map<String, Service> serviceByExternalId = data.getServicesByExternalId();
+        for (CalendarCsvModel c : data.getCalendar()) {
             Service service = prepareService(serviceByExternalId, c.getExternalServiceId(), schemaVersion);
             Calendar translate = translate(c, schemaVersion, service);
             calendars.add(translate);
         }
-        return Pair.of(calendars, serviceByExternalId);
+        data.setSavedCalendar(calendars);
+        data.setServicesByExternalId(serviceByExternalId);
+        return data;
     }
 
     public Calendar translate(

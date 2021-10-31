@@ -2,12 +2,18 @@ package pl.longhorn.gtfsrepo.calendardates.csv;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import pl.longhorn.gtfsrepo.calendardates.*;
-import pl.longhorn.gtfsrepo.calendardates.exception.*;
+import pl.longhorn.gtfsrepo.bundle.GtfsBundleWorkingData;
+import pl.longhorn.gtfsrepo.calendardates.CalendarDate;
+import pl.longhorn.gtfsrepo.calendardates.CalendarDateRepository;
+import pl.longhorn.gtfsrepo.calendardates.exception.CalendarDateExceptionType;
+import pl.longhorn.gtfsrepo.calendardates.exception.CalendarDateExceptionTypeMapper;
 import pl.longhorn.gtfsrepo.schemaversion.SchemaVersion;
-import pl.longhorn.gtfsrepo.service.*;
+import pl.longhorn.gtfsrepo.service.Service;
+import pl.longhorn.gtfsrepo.service.ServiceService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -18,14 +24,18 @@ public class CalendarDateCsvTranslator {
 
     private final ServiceService serviceService;
 
-    public Map<String, Service> translate(List<CalendarDateCsvModel> calendarDateCsvModels, SchemaVersion schemaVersion, Map<String, Service> serviceByExternalId) {
-        for (CalendarDateCsvModel csvModel : calendarDateCsvModels) {
+    public GtfsBundleWorkingData translate(GtfsBundleWorkingData data, SchemaVersion schemaVersion) {
+        var serviceByExternalId = data.getServicesByExternalId();
+        List<CalendarDate> calendarDates = new ArrayList<>(data.getCalendarDates().size());
+        for (CalendarDateCsvModel csvModel : data.getCalendarDates()) {
             Service service = prepareService(csvModel.getExternalServiceId(), serviceByExternalId, schemaVersion);
             var exceptionType = calendarDateExceptionTypeMapper.map(csvModel.getExceptionTypeValue());
             var calendarDate = map(csvModel, service, schemaVersion, exceptionType);
-            calendarDateRepository.save(calendarDate);
+            calendarDates.add(calendarDateRepository.save(calendarDate));
         }
-        return serviceByExternalId;
+        data.setServicesByExternalId(serviceByExternalId);
+        data.setSavedCalendarDates(calendarDates);
+        return data;
     }
 
     private CalendarDate map(CalendarDateCsvModel csvModel, Service service, SchemaVersion schemaVersion, CalendarDateExceptionType exceptionType) {

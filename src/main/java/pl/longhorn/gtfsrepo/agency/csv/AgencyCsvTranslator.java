@@ -2,10 +2,11 @@ package pl.longhorn.gtfsrepo.agency.csv;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import pl.longhorn.gtfsrepo.agency.*;
+import pl.longhorn.gtfsrepo.agency.Agency;
+import pl.longhorn.gtfsrepo.agency.AgencyRepository;
+import pl.longhorn.gtfsrepo.bundle.GtfsBundleWorkingData;
 import pl.longhorn.gtfsrepo.schemaversion.SchemaVersion;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -14,10 +15,12 @@ public class AgencyCsvTranslator {
 
     private final AgencyRepository agencyRepository;
 
-    public List<Agency> translate(List<AgencyCsvModel> csvModels, SchemaVersion schemaVersion) {
-        return csvModels.stream()
+    public GtfsBundleWorkingData translate(GtfsBundleWorkingData data, SchemaVersion schemaVersion) {
+        var agencies = data.getAgencyCsv().stream()
                 .map(m -> translate(m, schemaVersion))
                 .collect(Collectors.toList());
+        data.setSavedAgencies(agencies);
+        return data;
     }
 
     public Agency translate(AgencyCsvModel csvModel, SchemaVersion schemaVersion) {
