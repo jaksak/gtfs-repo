@@ -1,0 +1,1 @@
+ALTER TABLE `gtfs_routes` CHANGE `route_short_name` `route_short_name` VARCHAR (10) CHARACTER SET utf8mb4 COLLATE utf8mb4_polish_ci NULL DEFAULT NULL;

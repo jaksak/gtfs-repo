@@ -1,0 +1,1 @@
+ALTER TABLE `gtfs_agency` CHANGE `agency_url` `agency_url` VARCHAR (30) CHARACTER SET utf8mb4 COLLATE utf8mb4_polish_ci NOT NULL;
