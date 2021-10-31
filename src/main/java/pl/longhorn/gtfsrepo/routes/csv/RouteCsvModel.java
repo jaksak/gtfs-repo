@@ -25,7 +25,7 @@ public class RouteCsvModel {
     @CsvBindByName(column = "route_text_color")
     private String routeTextColor;
     @CsvBindByName(column = "route_sort_order")
-    private int routeSortOrder;
+    private Integer routeSortOrder;
     @CsvBindByName(column = "continuous_pickup")
     private Byte continuousPickupValue;
     @CsvBindByName(column = "continuous_drop_off")

@@ -12,6 +12,7 @@ public class RouteLoader {
     public List<RouteCsvModel> load(Reader reader) {
         return new CsvToBeanBuilder<RouteCsvModel>(reader)
                 .withType(RouteCsvModel.class)
+                .withIgnoreEmptyLine(Boolean.TRUE)
                 .build()
                 .parse();
     }
