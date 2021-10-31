@@ -1,0 +1,1 @@
+ALTER TABLE `gtfs_service` CHANGE `external_service_id` `external_service_id` VARCHAR (20) CHARACTER SET utf8mb4 COLLATE utf8mb4_polish_ci NOT NULL;
