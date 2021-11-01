@@ -31,10 +31,10 @@ public class CalendarDateCsvTranslator {
             Service service = prepareService(csvModel.getExternalServiceId(), serviceByExternalId, data.getSchemaVersion());
             var exceptionType = calendarDateExceptionTypeMapper.map(csvModel.getExceptionTypeValue());
             var calendarDate = map(csvModel, service, data.getSchemaVersion(), exceptionType);
-            calendarDates.add(calendarDateRepository.save(calendarDate));
+            calendarDates.add(calendarDate);
         }
+        calendarDateRepository.batchSave(calendarDates);
         data.setSavedServices(serviceByExternalId);
-        data.setSavedCalendarDates(calendarDates);
         return data;
     }
 

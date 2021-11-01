@@ -6,7 +6,6 @@ import pl.longhorn.gtfsrepo.agency.Agency;
 import pl.longhorn.gtfsrepo.agency.csv.AgencyCsvModel;
 import pl.longhorn.gtfsrepo.calendar.Calendar;
 import pl.longhorn.gtfsrepo.calendar.csv.CalendarCsvModel;
-import pl.longhorn.gtfsrepo.calendardates.CalendarDate;
 import pl.longhorn.gtfsrepo.calendardates.csv.CalendarDateCsvModel;
 import pl.longhorn.gtfsrepo.feedinfo.FeedInfo;
 import pl.longhorn.gtfsrepo.feedinfo.csv.FeedInfoCsvModel;
@@ -42,8 +41,6 @@ public class GtfsBundleWorkingData {
     private Map<String, Agency> savedAgencies = new HashMap<>();
     @Builder.Default
     private List<Calendar> savedCalendar = new ArrayList<>();
-    @Builder.Default
-    private List<CalendarDate> savedCalendarDates = new ArrayList<>();
     @Builder.Default
     private List<FeedInfo> savedFeedInfos = new ArrayList<>();
     @Builder.Default
