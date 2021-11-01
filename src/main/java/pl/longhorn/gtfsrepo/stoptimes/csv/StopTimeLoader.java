@@ -12,6 +12,7 @@ public class StopTimeLoader {
     public List<StopTimeCsvModel> load(Reader reader) {
         return new CsvToBeanBuilder<StopTimeCsvModel>(reader)
                 .withType(StopTimeCsvModel.class)
+                .withIgnoreEmptyLine(Boolean.TRUE)
                 .build()
                 .parse();
     }
