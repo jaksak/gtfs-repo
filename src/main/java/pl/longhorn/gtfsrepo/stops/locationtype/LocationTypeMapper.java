@@ -1,8 +1,11 @@
 package pl.longhorn.gtfsrepo.stops.locationtype;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Component
 public class LocationTypeMapper {
 
     private final Map<Byte, LocationType> locationsByBaseValueMap;

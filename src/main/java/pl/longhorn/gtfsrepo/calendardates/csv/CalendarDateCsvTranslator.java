@@ -24,13 +24,13 @@ public class CalendarDateCsvTranslator {
 
     private final ServiceService serviceService;
 
-    public GtfsBundleWorkingData translate(GtfsBundleWorkingData data, SchemaVersion schemaVersion) {
+    public GtfsBundleWorkingData translate(GtfsBundleWorkingData data) {
         var serviceByExternalId = data.getSavedServices();
         List<CalendarDate> calendarDates = new ArrayList<>(data.getCalendarDates().size());
         for (CalendarDateCsvModel csvModel : data.getCalendarDates()) {
-            Service service = prepareService(csvModel.getExternalServiceId(), serviceByExternalId, schemaVersion);
+            Service service = prepareService(csvModel.getExternalServiceId(), serviceByExternalId, data.getSchemaVersion());
             var exceptionType = calendarDateExceptionTypeMapper.map(csvModel.getExceptionTypeValue());
-            var calendarDate = map(csvModel, service, schemaVersion, exceptionType);
+            var calendarDate = map(csvModel, service, data.getSchemaVersion(), exceptionType);
             calendarDates.add(calendarDateRepository.save(calendarDate));
         }
         data.setSavedServices(serviceByExternalId);

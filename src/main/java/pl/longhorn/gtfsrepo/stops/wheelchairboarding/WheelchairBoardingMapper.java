@@ -1,8 +1,11 @@
 package pl.longhorn.gtfsrepo.stops.wheelchairboarding;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Component
 public class WheelchairBoardingMapper {
 
     private final Map<Byte, WheelchairBoarding> boardingByBaseValue;

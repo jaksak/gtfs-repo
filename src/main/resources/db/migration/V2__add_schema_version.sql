@@ -1,4 +1,4 @@
-CREATE TABLE `gtfs_repo`.`gtfs_schema_version`
+CREATE TABLE `gtfs_schema_version`
 (
     `id`           INT      NOT NULL AUTO_INCREMENT,
     `customer_id`  INT      NOT NULL,

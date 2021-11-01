@@ -19,7 +19,7 @@ class StopLoaderTest {
         assertEquals(327, result.size());
 
         var first = result.get(0);
-        assertEquals("stop_183_6119", first.getStopId());
+        assertEquals("stop_183_6119", first.getStopExternalId());
         assertEquals("", first.getStopCode());
         assertEquals("Bratysławska", first.getStopName());
         assertEquals("", first.getStopDesc());

@@ -1,4 +1,4 @@
-CREATE TABLE `gtfs_repo`.`gtfs_routes`
+CREATE TABLE `gtfs_routes`
 (
     `id`                  INT      NOT NULL AUTO_INCREMENT,
     `schema_id`           INT      NOT NULL,

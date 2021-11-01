@@ -15,9 +15,9 @@ public class FeedInfoCsvTranslator {
 
     private final FeedInfoRepository feedInfoRepository;
 
-    public GtfsBundleWorkingData translate(GtfsBundleWorkingData data, SchemaVersion schemaVersion) {
+    public GtfsBundleWorkingData translate(GtfsBundleWorkingData data) {
         var savedFeedInfos = data.getFeedInfos().stream()
-                .map(f -> translate(f, schemaVersion))
+                .map(f -> translate(f, data.getSchemaVersion()))
                 .collect(Collectors.toList());
         data.setSavedFeedInfos(savedFeedInfos);
         return data;

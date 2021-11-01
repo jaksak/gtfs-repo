@@ -22,11 +22,11 @@ public class RouteTranslator {
     private final PickupMapper pickupMapper;
     private final RoutesRepository routesRepository;
 
-    public GtfsBundleWorkingData translate(GtfsBundleWorkingData data, SchemaVersion schemaVersion) {
+    public GtfsBundleWorkingData translate(GtfsBundleWorkingData data) {
         List<Route> routes = new ArrayList<>(data.getRoutes().size());
         for (RouteCsvModel csvModel : data.getRoutes()) {
             Integer agencyId = findAgencyId(csvModel.getAgencyId(), data.getSavedAgencies());
-            Route route = map(csvModel, schemaVersion, agencyId);
+            Route route = map(csvModel, data.getSchemaVersion(), agencyId);
             routes.add(routesRepository.save(route));
         }
         data.setSavedRoutes(routes);

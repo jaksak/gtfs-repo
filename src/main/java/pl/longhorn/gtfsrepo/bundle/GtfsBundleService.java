@@ -14,6 +14,7 @@ import pl.longhorn.gtfsrepo.routes.csv.RouteTranslator;
 import pl.longhorn.gtfsrepo.schemaversion.SchemaVersion;
 import pl.longhorn.gtfsrepo.schemaversion.SchemaVersionRepository;
 import pl.longhorn.gtfsrepo.stops.csv.StopLoader;
+import pl.longhorn.gtfsrepo.stops.csv.StopTranslator;
 import pl.longhorn.gtfsrepo.stoptimes.csv.StopTimeLoader;
 import pl.longhorn.gtfsrepo.trips.csv.TripLoader;
 import pl.longhorn.gtfsrepo.zip.ZipEntryCaller;
@@ -43,33 +44,38 @@ public class GtfsBundleService {
     private final CalendarDateCsvTranslator calendarDateCsvTranslator;
     private final FeedInfoCsvTranslator feedInfoCsvTranslator;
     private final RouteTranslator routeTranslator;
+    private final StopTranslator stopTranslator;
 
     public void run(InputStream inputStream, int customerId) throws IOException {
-        var schemaVersion = prepareSchemaVersion(customerId);
-        var csvData = GtfsBundleWorkingData.builder();
-        new ZipEntryCaller(inputStream).call(f -> prepare(f, csvData));
-        save(csvData.build(), schemaVersion);
+        var data = GtfsBundleWorkingData.builder();
+        data.schemaVersion(prepareSchemaVersion(customerId));
+        new ZipEntryCaller(inputStream).call(f -> prepare(f, data));
+        save(data.build());
     }
 
-    private void save(GtfsBundleWorkingData data, SchemaVersion schemaVersion) {
+    private void save(GtfsBundleWorkingData data) {
         if (data.getAgencyCsv() != null) {
-            data = agencyCsvTranslator.translate(data, schemaVersion);
+            data = agencyCsvTranslator.translate(data);
         }
 
         if (data.getCalendar() != null) {
-            data = calendarCsvTranslator.translate(data, schemaVersion);
+            data = calendarCsvTranslator.translate(data);
         }
 
         if (data.getCalendarDates() != null) {
-            data = calendarDateCsvTranslator.translate(data, schemaVersion);
+            data = calendarDateCsvTranslator.translate(data);
         }
 
         if (data.getFeedInfos() != null) {
-            data = feedInfoCsvTranslator.translate(data, schemaVersion);
+            data = feedInfoCsvTranslator.translate(data);
         }
 
         if (data.getRoutes() != null) {
-            data = routeTranslator.translate(data, schemaVersion);
+            data = routeTranslator.translate(data);
+        }
+
+        if (data.getStops() != null) {
+            data = stopTranslator.translate(data);
         }
     }
 

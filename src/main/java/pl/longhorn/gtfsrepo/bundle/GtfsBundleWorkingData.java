@@ -12,7 +12,9 @@ import pl.longhorn.gtfsrepo.feedinfo.FeedInfo;
 import pl.longhorn.gtfsrepo.feedinfo.csv.FeedInfoCsvModel;
 import pl.longhorn.gtfsrepo.routes.Route;
 import pl.longhorn.gtfsrepo.routes.csv.RouteCsvModel;
+import pl.longhorn.gtfsrepo.schemaversion.SchemaVersion;
 import pl.longhorn.gtfsrepo.service.Service;
+import pl.longhorn.gtfsrepo.stops.Stop;
 import pl.longhorn.gtfsrepo.stops.csv.StopCsvModel;
 import pl.longhorn.gtfsrepo.stoptimes.csv.StopTimeCsvModel;
 import pl.longhorn.gtfsrepo.trips.csv.TripCsvModel;
@@ -34,6 +36,8 @@ public class GtfsBundleWorkingData {
     private final List<StopCsvModel> stops;
     private final List<TripCsvModel> trips;
 
+    private final SchemaVersion schemaVersion;
+
     @Builder.Default
     private Map<String, Agency> savedAgencies = new HashMap<>();
     @Builder.Default
@@ -44,6 +48,8 @@ public class GtfsBundleWorkingData {
     private List<FeedInfo> savedFeedInfos = new ArrayList<>();
     @Builder.Default
     private List<Route> savedRoutes = new ArrayList<>();
+    @Builder.Default
+    private List<Stop> savedStops = new ArrayList<>();
     @Builder.Default
     private Map<String, Service> savedServices = new HashMap<>();
 }

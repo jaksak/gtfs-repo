@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class StopCsvModel {
     @CsvBindByName(column = "stop_id")
-    private String stopId;
+    private String stopExternalId;
     @CsvBindByName(column = "stop_code")
     private String stopCode;
     @CsvBindByName(column = "stop_name")

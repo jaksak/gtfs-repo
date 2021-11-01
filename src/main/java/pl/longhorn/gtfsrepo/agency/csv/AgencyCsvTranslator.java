@@ -15,9 +15,9 @@ public class AgencyCsvTranslator {
 
     private final AgencyRepository agencyRepository;
 
-    public GtfsBundleWorkingData translate(GtfsBundleWorkingData data, SchemaVersion schemaVersion) {
+    public GtfsBundleWorkingData translate(GtfsBundleWorkingData data) {
         var agencies = data.getAgencyCsv().stream()
-                .map(m -> translate(m, schemaVersion))
+                .map(m -> translate(m, data.getSchemaVersion()))
                 .collect(Collectors.toMap(Agency::getAgencyExternalId, a -> a));
         data.setSavedAgencies(agencies);
         return data;
